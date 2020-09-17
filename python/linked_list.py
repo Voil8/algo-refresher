@@ -13,28 +13,34 @@ class LinkedList:
     def __init__(self):
         self.head = None
         self.tail = None
+        self.len = 0
 
     def push_back(self, node):
         curr = self.tail
         if curr is None:
             self.head = node
             self.tail = node
+            self.len += 1
             return 
         
         curr.next = node
         node.prev = curr
         self.tail = node
+        self.len += 1
 
     def push_front(self, node):
         curr = self.head
         if curr is None:
             self.head = node
             self.tail = node
+            self.len += 1
             return 
 
         curr.prev = node
         node.next = curr
         self.head = node
+
+        self.len += 1
 
     def find_node_(self, value):
         curr = self.head
@@ -49,12 +55,16 @@ class LinkedList:
         if node is not None:
             if node is self.head:
                 self.head = self.head.next
-                self.head.prev = None
+                if self.head is not None:
+                    self.head.prev = None
+                self.len -= 1
                 return 
 
             if node is self.tail:
                 self.tail = self.tail.prev
-                self.tail.next = None
+                if self.tail is not None:
+                    self.tail.next = None
+                self.len -= 1
                 return 
 
             prev = node.prev
@@ -62,6 +72,7 @@ class LinkedList:
 
             prev.next = next_
             next_.prev = prev
+            self.len -= 1
         
     
     def __repr__(self):
@@ -70,7 +81,7 @@ class LinkedList:
         while curr is not None:
             a += repr(curr)
             curr = curr.next
-        return a
+        return a + ':' + str(self.len)
 
 
 
@@ -87,12 +98,14 @@ if __name__ == '__main__':
     print(linked_l)
 
     print(f'is {s[-5]} in linked_list', linked_l.find_node_(s[-5]))
+    
 
     linked_l.remove(s[-5])
     linked_l.remove(s[-1])
 
     print(linked_l)
     print(linked_l.tail)
+    
 
 
         
