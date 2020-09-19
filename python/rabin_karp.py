@@ -11,17 +11,17 @@ def poly_hash(P):
     global prime, x
     h_ = 0
     for i, j in enumerate(P):
-        h_ += ord(j) * x**i % prime 
-    return h_
+        h_ += (ord(j) * x**i) % prime 
+    return h_ % prime
 
 def preCompute(T, l):
     global prime, x
-    len_ = len(T)-l
+    len_ = len(T)-l+1
     H = [0] * len_
     tHash = poly_hash(T[-l:])
     y=1
-    for i in range(len_):
-        y *= y % prime
+    for i in range(l):
+        y *= x % prime
 
     H[len_-1] = tHash
     for i in range(len_-1)[::-1]:
@@ -37,12 +37,14 @@ def rabin_karp(T, P):
     results = []
     pHash = poly_hash(P)
     l = len(P)
-    len_ = len(T) - l
-    H = [0]*len_
+    len_ = len(T) - l + 1
     
-    tHash = preCompute(T, len(P))
+    tHash = preCompute(T, l)
+    # print(f'len of tHash: {len(tHash)} {len(P)}')
+    # print(tHash, pHash)
+
     for i in range(len_):
-        if tHash[i] == pHash:
+        if tHash[i] != pHash:
             continue
         elif areEqual(T[i:i+l], P):
             results.append(i)
@@ -50,17 +52,17 @@ def rabin_karp(T, P):
 
 
 def test():
-    tt1 = 'so hello from the other side, at least i can see then I tried!'
-    pp11 = 'r sid'
-    pp12 = 'ea'    
+    tt1 = 'so hello from tried!'
+    pp11 = 'tried!'
+    pp12 = 'so hel'    
 
     tt2 = 'aaaaaaaabaaaabaabaabaa'
     pp21 = 'aaaa'
-    pp22 = 'aaabaa'
+    pp22 = 'abaa'
     
     tl = [(tt1, pp11), (tt1, pp12), (tt2, pp21), (tt2, pp22)]
     for tt, pp in tl:
-        print(f'T:{tt}, P:{pp}\n{[(i, tt[i:i+len(pp)]) for i in rabin_karp(tt, pp)]}\n')
+        print(f'T:{tt}, {len(tt)}, P:{pp}\n{[(i, tt[i:i+len(pp)]) for i in rabin_karp(tt, pp)]}\n')
 
 if __name__ == '__main__':
     test()
