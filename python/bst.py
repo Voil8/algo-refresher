@@ -27,6 +27,35 @@ def add(bst, node):
     return bst
 
 
+def del_(bst_n):
+    if bst_n.right is None:
+        par = bst_n.parent
+        if bst_n.key < par.key:
+            par.left = bst_n.left
+        else:
+            par.right = bst_n.left
+        # bst_n = bst_n.left
+        # if bst_n is not None:
+        #     bst_n.parent = par
+        return
+
+    ld = ldes(bst_n.right)
+    rt = ld.right
+
+    key = ld.key
+
+    par = ld.parent
+    if ld.key < par.key:
+        par.left = rt
+    else:
+        par.right = rt
+
+    bst_n.key = key
+
+        
+    
+
+
 
 def find(bst, key):
     if bst is None:
@@ -85,9 +114,13 @@ def prev_elem(bst_n):
         return rdes(bst_n.left)
     return lanc(bst_n)
 
-
-
-
+def range_search(bst_n, f, t):
+    l = []
+    node = md_find(bst_n, f)
+    while node is not None and node.key < t:
+        l.append(node)
+        node = next_elem(node)
+    return l
 
 def dfs_pre(bst):
     if bst is None:
@@ -111,6 +144,7 @@ def dfs_post(bst, a=None):
     dfs_post(bst.left)
     dfs_post(bst.right)
     print(bst.key, end=' ')
+
 
 
 
