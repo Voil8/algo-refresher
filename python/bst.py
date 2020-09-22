@@ -1,5 +1,4 @@
-import pdb
-
+from bst_print import _display_aux as bstp
 class Node:
     def __init__(self, key=None):
         self.key = key
@@ -8,66 +7,23 @@ class Node:
         self.right = None
 
     def __repr__(self):
-        lines, *_ = self._display_aux()
+        lines, *_ = bstp(self)
         return '\n'.join(lines)
         # for line in lines:
             # print(line)
 
-    def _display_aux(self):
-        """Returns list of strings, width, height, and horizontal coordinate of the root."""
-        # No child.
-        if self.right is None and self.left is None:
-            line = '%s' % self.key
-            width = len(line)
-            height = 1
-            middle = width // 2
-            return [line], width, height, middle
 
-        # Only left child.
-        if self.right is None:
-            lines, n, p, x = self.left._display_aux()
-            s = '%s' % self.key
-            u = len(s)
-            first_line = (x + 1) * ' ' + (n - x - 1) * '_' + s
-            second_line = x * ' ' + '/' + (n - x - 1 + u) * ' '
-            shifted_lines = [line + u * ' ' for line in lines]
-            return [first_line, second_line] + shifted_lines, n + u, p + 2, n + u // 2
-
-        # Only right child.
-        if self.left is None:
-            lines, n, p, x = self.right._display_aux()
-            s = '%s' % self.key
-            u = len(s)
-            first_line = s + x * '_' + (n - x) * ' '
-            second_line = (u + x) * ' ' + '\\' + (n - x - 1) * ' '
-            shifted_lines = [u * ' ' + line for line in lines]
-            return [first_line, second_line] + shifted_lines, n + u, p + 2, u // 2
-
-        # Two children.
-        left, n, p, x = self.left._display_aux()
-        right, m, q, y = self.right._display_aux()
-        s = '%s' % self.key
-        u = len(s)
-        first_line = (x + 1) * ' ' + (n - x - 1) * '_' + s + y * '_' + (m - y) * ' '
-        second_line = x * ' ' + '/' + (n - x - 1 + u + y) * ' ' + '\\' + (m - y - 1) * ' '
-        if p < q:
-            left += [n * ' '] * (q - p)
-        elif q < p:
-            right += [m * ' '] * (p - q)
-        zipped_lines = zip(left, right)
-        lines = [first_line, second_line] + [a + u * ' ' + b for a, b in zipped_lines]
-        return lines, n + m + u, max(p, q) + 2, n + u // 2               
 
 def add(bst, node):
-    '''bst:Node is a bst root'''    
+    '''bst:Node is a bst root'''
     if bst is None:
         bst = node
     else:
         node.parent = bst
         if node.key < bst.key:
-            bst.left = add(bst.left, node)    
+            bst.left = add(bst.left, node)
         else:
-            bst.right = add(bst.right, node)    
+            bst.right = add(bst.right, node)
     return bst
 
 
@@ -81,22 +37,71 @@ def find(bst, key):
         return find(bst.left, key)
     return find(bst.right, key)
 
+def md_find(bst, key):
+    if bst.key == key:
+        return bst
+    elif bst.key < key:
+        if bst.right is not None:
+            return md_find(bst.right, key)
+        return bst
+    elif bst.left is not None:
+        return md_find(bst.left, key)
+    return bst
 
-    
+def next_elem(bst_n):
+    """given a node find node in the tree with
+    next largest key"""
+    if bst_n.right is not None:
+        return ldes(bst_n.right)
+    return ranc(bst_n)
+
+
+def ldes(bst_n):
+    if bst_n.left is None:
+        return bst_n
+    return ldes(bst_n.left)
+
+def rdes(bst_n):
+    if bst_n.right is None:
+        return bst_n
+    return rdes(bst_n.right)
+
+def ranc(bst_n):
+    if bst_n.parent is None:
+        return
+    if bst_n.key < bst_n.parent.key:
+        return bst_n.parent
+    return ranc(bst_n.parent)
+
+def lanc(bst_n):
+    if bst_n.parent is None:
+        return
+    if bst_n.key >= bst_n.parent.key:
+        return bst_n.parent
+    return lanc(bst_n.parent)
+
+def prev_elem(bst_n):
+    if bst_n.left is not None:
+        return rdes(bst_n.left)
+    return lanc(bst_n)
+
+
+
+
 
 def dfs_pre(bst):
     if bst is None:
-        return None    
+        return None
     print(bst.key, end=' ')
-    dfs_pre(bst.left)       
+    dfs_pre(bst.left)
     dfs_pre(bst.right)
 
 
 def dfs_in(bst):
     if bst is None:
-        return None    
+        return None
     dfs_in(bst.left)
-    print(bst.key, end=' ')    
+    print(bst.key, end=' ')
     dfs_in(bst.right)
 
 
@@ -107,27 +112,6 @@ def dfs_post(bst, a=None):
     dfs_post(bst.right)
     print(bst.key, end=' ')
 
-
-def test():
-    import random
-    # arr = random.choices(range(300), k=10)
-    arr = [131, 179, 198, 72, 22, 108, 111, 163, 272, 46]
-    bst = Node(arr[0])
-    for i in arr[1:]:
-        add(bst, Node(i))
-    # check add
-    print(arr)
-    print(bst)
-    
-    # for i in [dfs_pre, dfs_in, dfs_post]:
-    #     i(bst)
-    #     print()
-
-    print('Check find')
-    # print(bst)
-    print(find(bst, 46))
-
-    # pdb.set_trace()
 
 
 if __name__ == '__main__':
