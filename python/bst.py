@@ -52,11 +52,6 @@ def del_(bst_n):
 
     bst_n.key = key
 
-        
-    
-
-
-
 def find(bst, key):
     if bst is None:
         return

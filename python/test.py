@@ -1,3 +1,4 @@
+import pdb
 def test_bst():
     import bst as B
     import random, pdb
@@ -56,7 +57,36 @@ def test_bst():
 
     # pdb.set_trace()
 
+def more_bst_test():
+    import more_bst as MB
+    import bst as B
+
+    arr = [131, 179, 198, 72, 22, 108, 111, 163, 272, 46]
+    bst_ = B.Node(arr[0])
+    for i in arr[1:]:
+        B.add(bst_, B.Node(i))
+    # check add
+    print(arr)
+    print(bst_)
+
+    while(1):
+        num = int(input('Enter node key to right rotate '))
+        if num == -1: break
+        node = B.md_find(bst_, num)
+        print('Rotation of:')
+        print(node)
+        if node.parent is None:
+            bst_ = MB.rotate_right(node)
+        else:
+            MB.rotate_right(node)
+        print('Now tree')
+        print(bst_)
+
+    pdb.set_trace()
+
+
 
 
 if __name__ == '__main__':
-    test_bst()
+    # test_bst()
+    more_bst_test()
