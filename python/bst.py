@@ -5,6 +5,20 @@ class Node:
         self.parent = None
         self.left = None
         self.right = None
+        self.height = 1
+
+    def get_height(self):
+        height = 1
+        if self.left is None and self.right is None:
+            return height
+        elif self.left is not None and self.right is None:
+            return height + self.left.get_height()
+
+        elif self.right is not None and self.left is None:
+            return height + self.right.get_height()
+
+        else:
+            return height + max(self.right.get_height(), self.left.get_height())
 
     def __repr__(self):
         lines, *_ = bstp(self)
@@ -12,6 +26,11 @@ class Node:
         # for line in lines:
             # print(line)
 
+
+def height(bst_):
+    if bst_ is None:
+        return 0
+    return 1 + max(height(bst_.left), height(bst_.right))
 
 
 def add(bst, node):
@@ -22,8 +41,10 @@ def add(bst, node):
         node.parent = bst
         if node.key < bst.key:
             bst.left = add(bst.left, node)
+            bst.height = max(bst.height, 1+bst.left.height)
         else:
             bst.right = add(bst.right, node)
+            bst.height = max(bst.height, 1+bst.right.height)
     return bst
 
 

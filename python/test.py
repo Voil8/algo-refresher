@@ -11,6 +11,21 @@ def test_bst():
     print(arr)
     print(bst_)
 
+    # checking some heights
+
+    print('Checking height function')
+    while(1):
+        num = int(input('Enter node key to measure height '))
+        if num == -1: break
+        node = B.md_find(bst_, num)
+        print('height of:')
+        print(node)
+
+        # print(f'is {node.get_height()}')
+        # print(f'is {B.height(node)}')
+        # print(f'is - {node.height}')
+
+
     # for i in [B.dfs_pre, B.dfs_in, B.dfs_post]:
     #     i(bst_)
     #     print()
@@ -88,5 +103,5 @@ def more_bst_test():
 
 
 if __name__ == '__main__':
-    # test_bst()
-    more_bst_test()
+    test_bst()
+    # more_bst_test()
